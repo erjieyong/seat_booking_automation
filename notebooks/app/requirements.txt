@@ -1,0 +1,5 @@
+# python --version 3.11.3
+selenium==4.23.1
+urllib3==2.2.2
+streamlit==1.37.1
+webdriver-manager==4.0.2
