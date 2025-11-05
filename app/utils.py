@@ -157,6 +157,7 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
         vcode_field.send_keys(vcode)
         sign_in_button = WebDriverWait(driver, LONG_DELAY).until(EC.presence_of_element_located((By.NAME, "SignIn")))
         sign_in_button.click()
+        print("logged in")
         
     except:
         st.write(f"Login Failed.")
@@ -164,6 +165,7 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
 
     
     # updated table input to table_preference input
+    # updated to inlcude table layout in .png
     # updated to include for-loop to scan through all tables (in order of table preference)
     # updated to include GOD mode to book seat for ALL individual time slot (instead of AM/PM bulk booking)
     # updated to include support for delayed clicking of timeslots ("time_slots")
@@ -245,6 +247,7 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                                 """
                                 output = driver.execute_script(js_script)
                                 time.sleep(1)
+                                # driver.get_screenshot_as_file("screenshot0.png")
                                 
                                 has_selected_seat = check_seat_selection(driver)
                                 if (has_selected_seat):
@@ -337,6 +340,7 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                             """
                             output = driver.execute_script(js_script)
                             time.sleep(1)
+                            # driver.get_screenshot_as_file("screenshot0.png")
                             
                             has_selected_seat = check_seat_selection(driver)
                             if (has_selected_seat):
@@ -406,5 +410,3 @@ def check_seat_selection(driver):
        has_selected_seat = False
        
    return has_selected_seat
-
-
