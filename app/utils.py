@@ -188,7 +188,7 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                 for time_slot in time_slots[ampm]:
                     target_date = date
                     target_mth = shortmonth_text2no[target_date[:3]]
-
+                    time.sleep(2)
                     driver.get("https://google.com/xxx/Book-a-Space")
                     time.sleep(1)
                     # click on Do some quiet work
@@ -276,7 +276,7 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
             elif is_god_mode == False:
                 target_date = date
                 target_mth = shortmonth_text2no[target_date[:3]]
-
+                time.sleep(2)
                 driver.get("https://google.com/xxx/Book-a-Space")
                 time.sleep(1)
                 # click on Do some quiet work
