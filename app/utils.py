@@ -201,7 +201,10 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                     current_month = driver.find_element(By.CSS_SELECTOR,'div[class*="css-1v994a0"]').text
                     month_text2no[current_month]
                     time.sleep(0.5)
-
+                    
+                    if target_mth < month_text2no[current_month]:
+                        target_mth = target_mth+12 # to account for booking in Jan 2025 [1+12 = 13] when it's currently Oct 2024 [10]
+                        
                     # press the next month button depending on how many times it is away from our target_mth
                     for i in range(target_mth-month_text2no[current_month]):
                         driver.find_element(By.CSS_SELECTOR,'button[title="Next month"]').send_keys(Keys.RETURN)
@@ -289,6 +292,9 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                 current_month = driver.find_element(By.CSS_SELECTOR,'div[class*="css-1v994a0"]').text
                 month_text2no[current_month]
                 time.sleep(0.5)
+                
+                if target_mth < month_text2no[current_month]:
+                    target_mth = target_mth+12 # to account for booking in Jan 2025 [1+12 = 13] when it's currently Oct 2024 [10]
 
                 # press the next month button depending on how many times it is away from our target_mth
                 for i in range(target_mth-month_text2no[current_month]):
