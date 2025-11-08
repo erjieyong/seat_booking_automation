@@ -192,10 +192,12 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                     target_mth = shortmonth_text2no[target_date[:3]]
                     time.sleep(2)
                     driver.get("https://google.com/xxx/Book-a-Space")
-                    time.sleep(1)
+
                     # click on Do some quiet work
-                    driver.find_element(By.CSS_SELECTOR,'button[id="Do some quiet work"]').send_keys(Keys.RETURN)
+                    booking_purpose_button = WebDriverWait(driver, LONG_DELAY).until(EC.presence_of_element_located((By.XPATH, "//button[.//div[contains(text(), 'Do some quiet work')]]")))
+                    booking_purpose_button.click()    
                     time.sleep(1)
+                    
                     # click on Next
                     driver.find_element(By.CSS_SELECTOR,'button[class*="w-full h-full py-4 px-5 txt-MontserratExtraBold"]').send_keys(Keys.RETURN)
                     time.sleep(1)
@@ -284,10 +286,12 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                 target_mth = shortmonth_text2no[target_date[:3]]
                 time.sleep(2)
                 driver.get("https://google.com/xxx/Book-a-Space")
-                time.sleep(1)
+
                 # click on Do some quiet work
-                driver.find_element(By.CSS_SELECTOR,'button[id="Do some quiet work"]').send_keys(Keys.RETURN)
+                booking_purpose_button = WebDriverWait(driver, LONG_DELAY).until(EC.presence_of_element_located((By.XPATH, "//button[.//div[contains(text(), 'Do some quiet work')]]")))
+                booking_purpose_button.click()   
                 time.sleep(1)
+                
                 # click on Next
                 driver.find_element(By.CSS_SELECTOR,'button[class*="w-full h-full py-4 px-5 txt-MontserratExtraBold"]').send_keys(Keys.RETURN)
                 time.sleep(1)
