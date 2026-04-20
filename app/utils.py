@@ -4,6 +4,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import (
+    TimeoutException,
+    ElementClickInterceptedException,
+    NoSuchElementException,
+    StaleElementReferenceException
+)
 import time
 
 from selenium.webdriver.support.ui import WebDriverWait
@@ -248,10 +254,15 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                                 }}
                                 """
                                 output = driver.execute_script(js_script)
-                                time.sleep(1)
-                                # driver.get_screenshot_as_file("screenshot0.png")
-                                
-                                has_selected_seat = check_seat_selection(driver)
+
+                                # Smart wait for seat selection confirmation (up to 5 seconds)
+                                try:
+                                    WebDriverWait(driver, MID_DELAY).until(
+                                        EC.presence_of_element_located((By.XPATH, '//div[contains(text(), "Selected Seat")]'))
+                                    )
+                                    has_selected_seat = True
+                                except (TimeoutException, NoSuchElementException):
+                                    has_selected_seat = False
                                 if (has_selected_seat):
                                     # click on Book
                                     driver.find_element(By.CSS_SELECTOR,'button[class*="w-full h-full py-4 px-5 txt-MontserratExtraBold"]').send_keys(Keys.RETURN)
@@ -259,8 +270,20 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
 
                                     # Confirm booking by clicking on the 2nd button
                                     # driver.get_screenshot_as_file("screenshot0.png")
-                                    confirm_booking_button = WebDriverWait(driver, DELAY).until(EC.presence_of_element_located((By.XPATH, "//button[contains(text(), 'Confirm and Book')]")))
-                                    confirm_booking_button.click()
+                                    try:
+                                        confirm_booking_button = WebDriverWait(driver, DELAY).until(
+                                            EC.element_to_be_clickable((By.XPATH, "//button[.//div[contains(text(), 'Confirm and Book')]]"))
+                                        )
+                                        confirm_booking_button.click()
+                                    except (TimeoutException, ElementClickInterceptedException, StaleElementReferenceException) as e:
+                                        st.write(f"Standard click failed ({type(e).__name__}), attempting JavaScript click")
+                                        try:
+                                            # Re-find element for JavaScript click fallback
+                                            confirm_booking_button = driver.find_element(By.XPATH, "//button[.//div[contains(text(), 'Confirm and Book')]]")
+                                            driver.execute_script("arguments[0].click();", confirm_booking_button)
+                                        except NoSuchElementException as fallback_error:
+                                            st.write(f"Failed to locate 'Confirm and Book' button: {fallback_error}")
+                                            raise
                                     time.sleep(1)
 
                                     # confirm
@@ -343,10 +366,15 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
                             }}
                             """
                             output = driver.execute_script(js_script)
-                            time.sleep(1)
-                            # driver.get_screenshot_as_file("screenshot0.png")
-                            
-                            has_selected_seat = check_seat_selection(driver)
+
+                            # Smart wait for seat selection confirmation (up to 5 seconds)
+                            try:
+                                WebDriverWait(driver, MID_DELAY).until(
+                                    EC.presence_of_element_located((By.XPATH, '//div[contains(text(), "Selected Seat")]'))
+                                )
+                                has_selected_seat = True
+                            except (TimeoutException, NoSuchElementException):
+                                has_selected_seat = False
                             if (has_selected_seat):
                                 # click on Book
                                 driver.find_element(By.CSS_SELECTOR,'button[class*="w-full h-full py-4 px-5 txt-MontserratExtraBold"]').send_keys(Keys.RETURN)
@@ -354,8 +382,20 @@ def book_spaces(table_pref, start_date, end_date, day_of_week_pref, start_time, 
 
                                 # Confirm booking by clicking on the 2nd button
                                 # driver.get_screenshot_as_file("screenshot0.png")
-                                confirm_booking_button = WebDriverWait(driver, DELAY).until(EC.presence_of_element_located((By.XPATH, "//button[contains(text(), 'Confirm and Book')]")))
-                                confirm_booking_button.click()
+                                try:
+                                    confirm_booking_button = WebDriverWait(driver, DELAY).until(
+                                        EC.element_to_be_clickable((By.XPATH, "//button[.//div[contains(text(), 'Confirm and Book')]]"))
+                                    )
+                                    confirm_booking_button.click()
+                                except (TimeoutException, ElementClickInterceptedException, StaleElementReferenceException) as e:
+                                    st.write(f"Standard click failed ({type(e).__name__}), attempting JavaScript click")
+                                    try:
+                                        # Re-find element for JavaScript click fallback
+                                        confirm_booking_button = driver.find_element(By.XPATH, "//button[.//div[contains(text(), 'Confirm and Book')]]")
+                                        driver.execute_script("arguments[0].click();", confirm_booking_button)
+                                    except NoSuchElementException as fallback_error:
+                                        st.write(f"Failed to locate 'Confirm and Book' button: {fallback_error}")
+                                        raise
                                 time.sleep(1)
 
                                 # confirm
